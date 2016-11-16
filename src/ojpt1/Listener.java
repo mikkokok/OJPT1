@@ -1,9 +1,7 @@
 package ojpt1;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
-import java.net.SocketException;
 
 //Kuuntelijaluokka
 public class Listener extends Thread{
@@ -12,7 +10,7 @@ public class Listener extends Thread{
 	//private DatagramSocket socket;
 	private ServerSocket socket;
 	
-	public Listener(int port) throws Exception{
+	public Listener(int port) throws IOException{
 		System.out.println("Listener olio luotu");
 		this.port = port;
 		//socket = new DatagramSocket(port);
