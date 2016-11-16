@@ -26,6 +26,7 @@ public class Connection {
 	public void Connect() throws IOException{
 		
 			//Luodaan udp soketti koneen vapaaseen porttiin
+			System.out.println("Connect()");
 			DatagramSocket udpSocket = new DatagramSocket();
 
 			//Luodaan muuttuja palvelimen kohdeosoitelle

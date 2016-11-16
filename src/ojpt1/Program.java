@@ -72,9 +72,10 @@ public class Program extends Canvas implements Runnable {
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		WorkDistributor distributor;
 		Thread thread1 = new WorkDistributor();
+		Thread thread2 = new Listener(1025);
 		thread1.start();
+		thread2.start();
 		new Program();
 
 	}

@@ -49,6 +49,7 @@ public class WorkDistributor extends Thread {
 				// what was received?
 				String message = new String(receivedPacket.getData(), 0,
 						receivedPacket.getLength());
+				System.out.println("Received message: "+message);
 				int contactPort = -1;
 				try {
 					contactPort = Integer.parseInt(message.trim());
@@ -93,6 +94,7 @@ public class WorkDistributor extends Thread {
 					System.out.println("Spawning thread ...");
 				}
 				Thread.sleep(2000); // let the other side set itself up ...
+				System.out.println("Creating socket for: "+clientAddress+" "+clientPort);
 				Socket s = new Socket(clientAddress, clientPort);
 				s.setSoTimeout(3000);
 				InputStream iS = s.getInputStream();
