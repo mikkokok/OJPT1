@@ -47,6 +47,7 @@ public class Program extends Canvas implements Runnable {
 	//run-metodi, joka sovelluksen toiminnan jatkuvuudesta aina 
 	//siihen saakka kunnes käyttäjä itse sulkee sovelluksen tai jos 
 	//jokin muu tehtävänannon sulkeutumis kriteeri täyttyy
+	@SuppressWarnings("static-access")
 	public void run() {
 		
 		 //Silmukka joka on käynnissä kun sovellus on käynnissä
@@ -69,8 +70,11 @@ public class Program extends Canvas implements Runnable {
 	}
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
+		WorkDistributor distributor;
+		Thread thread1 = new WorkDistributor();
+		thread1.start();
 		new Program();
 
 	}
