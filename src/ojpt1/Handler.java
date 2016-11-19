@@ -8,8 +8,10 @@ import java.io.IOException;
 //"Muodosta yhteys"-painikkeelle
 public class Handler implements ActionListener {
 
-	//Muuttuja joka sis‰lt‰‰ palvelimen portin numeron
-	private final int targetPort = 3126;	
+	//M‰‰ritell‰‰n muuttujat palvelimen portille 
+	//ja aikarajalle joka on 5 sekunttia
+	private final int targetPort = 3126;
+	private int timeOut = 5000;
 	
 	public Handler(){
 		
@@ -19,8 +21,8 @@ public class Handler implements ActionListener {
 	//painiketta "Muodosta yhteys"-painetaan
 	public void actionPerformed(ActionEvent arg0) {
 		
-		//Luodaan Connection-olio palvelimen portin numeron avulla
-		Connection udpConnection = new Connection(targetPort);
+		//Luodaan Connection-olio palvelimen portin numeron ja aikarajan avulla
+		Connection udpConnection = new Connection(targetPort, timeOut);
 		
 		//Luodaan yhteys
 		try {
