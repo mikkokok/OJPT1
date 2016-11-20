@@ -25,8 +25,6 @@ public class Connection {
 		this.targetPort = targetPort;
 		this.timeOut = timeOut;
 		data = new byte[256];
-		myPort = "1025";
-		data = myPort.getBytes();
 		counter = 0;
 	}
 	
@@ -38,8 +36,14 @@ public class Connection {
 		DatagramSocket udpSocket = new DatagramSocket();
 			
 		//Luodaan soketit TCP-yhteyttä varten
-		ServerSocket receiverSocket;
+		ServerSocket receiverSocket = new ServerSocket(0);
 		Socket clientSocket = new Socket();
+		
+		//Tallennetaan vapaa portti ja muunnetaan se sopivaan muotoon
+		//UDP paketin lähettämistä varten
+		int getPort = receiverSocket.getLocalPort();
+		myPort = Integer.toString(getPort);
+		data = myPort.getBytes();
 
 		//Luodaan muuttuja palvelimen kohdeosoitelle
 		InetAddress targetAddress = InetAddress.getByName("localhost");
@@ -53,7 +57,7 @@ public class Connection {
 			
 		//Alustetaan palvelinsoketti palvelimen porttiin ja 
 		//asetetaan sille aikarajaksi 5 sekunttia
-		receiverSocket = new ServerSocket(targetPort);
+		//receiverSocket = new ServerSocket(data.length);
 		receiverSocket.setSoTimeout(timeOut);
 
 		while(true){
@@ -116,7 +120,8 @@ public class Connection {
 					
 					receiverSocket.setSoTimeout(timeOut);
 					
-					break;	
+					break;
+					
 
 				}
 				
