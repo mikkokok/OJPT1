@@ -1,11 +1,6 @@
 package ojpt1;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InterruptedIOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -96,7 +91,7 @@ public class WorkDistributor extends Thread {
 				Thread.sleep(2000); // let the other side set itself up ...
 				System.out.println("Creating socket for: "+clientAddress+" "+clientPort);
 				Socket s = new Socket(clientAddress, clientPort);
-				s.setSoTimeout(3000);
+				s.setSoTimeout(300000); // alkup 3000
 				InputStream iS = s.getInputStream();
 				OutputStream oS = s.getOutputStream();
 				ObjectOutputStream oOut = new ObjectOutputStream(oS);
@@ -159,6 +154,8 @@ public class WorkDistributor extends Thread {
 		private boolean makeTest(int question, int answer,
 				ObjectOutputStream masterOut, ObjectInputStream masterIn)
 				throws IOException {
+			if (verboseMode)
+				System.out.println("makeTest question: "+question);
 			masterOut.writeInt(question);
 			masterOut.flush();
 			int answerRead = masterIn.readInt();
@@ -280,6 +277,9 @@ public class WorkDistributor extends Thread {
 				System.err
 						.println("Received exception while testing ... aborting.");
 				System.err.println("Exception: " + e);
+				if (verboseMode) {
+					// TODO better error message
+				}
 				return;
 			}
 		} // generateTraffic
@@ -291,14 +291,15 @@ public class WorkDistributor extends Thread {
 			}
 			for (int i = 0; i < clients; i++) {
 				int p;
+				int lisa = 1;
 				if (verboseMode) {
-					System.out.println("Trying to receive " + i
+					System.out.println("Trying to receive " + i+lisa
 							+ "th port number.");
 				}
 				try {
 					p = oIn.readInt();
 				} catch (IOException e) {
-					System.out.println(e);
+					System.out.println("receivePortNumbers "+e);
 					if (verboseMode) {
 						System.out
 								.println("Error in reading portnumbers ... aborting.");

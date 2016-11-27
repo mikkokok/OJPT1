@@ -12,18 +12,16 @@ public class Handler implements ActionListener {
 	//ja aikarajalle joka on 5 sekunttia
 	private final int targetPort = 3126;
 	private int timeOut = 5000;
-	
-	public Handler(){
-		
-	}
 
+	public Handler(){
+	}
 	//Metodi joka muodostaa yhteyden palvelimeen kun
 	//painiketta "Muodosta yhteys"-painetaan
 	public void actionPerformed(ActionEvent arg0) {
-		
+
 		//Luodaan Connection-olio palvelimen portin numeron ja aikarajan avulla
 		Connection udpConnection = new Connection(targetPort, timeOut);
-		
+
 		//Luodaan yhteys
 		try {
 			udpConnection.Connect();
@@ -31,7 +29,5 @@ public class Handler implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
-	
 }

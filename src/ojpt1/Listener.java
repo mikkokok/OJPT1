@@ -17,11 +17,7 @@ public class Listener extends Thread{
 		socket = new ServerSocket(port);
 		socket.setSoTimeout(5000);
 	}
-
-
 	public void run() {
 		System.out.println("Listener käynnistetty");
-		
 	}
-	
 }
