@@ -109,12 +109,38 @@ public class Connection {
 				else{
 					objectOut.writeInt(-1);
 					objectOut.flush();
+					//Suljetaan soketit
+					udpSocket.close();	
+					receiverSocket.close();
+					clientSocket.close();
 					System.exit(1);
+				} // else
+				while (true) { // Luetaan viestejä portilta
+					int luettu = objectIn.readInt();
+					System.out.println("------------Connection luokka: "+luettu);
+					if (luettu == 1) {
+						objectOut.writeInt(kokonaisSumma());
+						objectOut.flush();
+					} else if (luettu == 2) {
+						objectOut.writeInt(missaSuurinSumma());
+						objectOut.flush();
+					} else if (luettu == 3) {
+						objectOut.writeInt(kokonaisMaara());
+						objectOut.flush();
+					} else if (luettu == 0) {
+						//Suljetaan soketit
+						udpSocket.close();	
+						receiverSocket.close();
+						clientSocket.close();
+						for (int i = 0; i < palvelijat.size(); i++) {
+							palvelijat.get(i).interrupt();
+						}
+					} else {
+						objectOut.writeInt(-1);
+						objectOut.flush();
+					}
 				}
-				//Suljetaan soketit
-				udpSocket.close();	
-				receiverSocket.close();
-				clientSocket.close();
+
 			}catch(SocketTimeoutException e){
 				//Mikäli yhteyttä palvelimeen ei pystytä 5:n sekunnin päästä muodostamaan niin
 				//lähetetään UDP-paketti uudestaan, resetoidaan aikaraja ja yritetään muodostaa yhteys uudelleen
