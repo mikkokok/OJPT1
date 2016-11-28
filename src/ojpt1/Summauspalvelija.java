@@ -56,10 +56,11 @@ public class Summauspalvelija extends Thread {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		if (verbose)
+			System.out.println("-------Aloitetaan lukemaan portista: "+this.portti);
 		while(true)
 		{
-			if (verbose)
-				System.out.println("-------Aloitetaan lukemaan portista: "+this.portti);
+			
 			try {
 				luettu = objectIn.readInt();
 				if (verbose) 
