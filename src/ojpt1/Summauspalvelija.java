@@ -80,8 +80,10 @@ public class Summauspalvelija extends Thread {
 					System.out.println(this.portti+" on suljettu");
 				}
 			} catch (IOException e) {
+				if (verbose) {
 				System.out.println("--------TryCatch blokissa");
-				//e.printStackTrace();
+				e.printStackTrace();
+				}
 				running = false;
 				//break;
 			} // catch
