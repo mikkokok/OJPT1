@@ -50,10 +50,7 @@ public class Summauspalvelija extends Thread {
 		//Luodaan virrat joiden sisällä sovellus kommunikoi palvelimen kanssa
 
 		try {
-			OutputStream outStream = connectionSocket.getOutputStream();
 			InputStream inStream = connectionSocket.getInputStream();
-
-			ObjectOutputStream objectOut = new ObjectOutputStream(outStream);
 			objectIn = new ObjectInputStream(inStream);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
