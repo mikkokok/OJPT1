@@ -91,7 +91,7 @@ public class WorkDistributor extends Thread {
 				Thread.sleep(2000); // let the other side set itself up ...
 				System.out.println("Creating socket for: "+clientAddress+" "+clientPort);
 				Socket s = new Socket(clientAddress, clientPort);
-				s.setSoTimeout(300000); // alkup 3000
+				s.setSoTimeout(3000000); // alkup 3000
 				InputStream iS = s.getInputStream();
 				OutputStream oS = s.getOutputStream();
 				ObjectOutputStream oOut = new ObjectOutputStream(oS);

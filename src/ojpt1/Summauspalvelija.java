@@ -2,6 +2,7 @@ package ojpt1;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 
 /**
  * @author Mikko Kokkonen
@@ -29,6 +31,7 @@ public class Summauspalvelija extends Thread {
 	private Socket connectionSocket = null;
 	private ObjectInputStream objectIn = null;
 	private boolean verbose = true;
+	private boolean running = true;
 
 	public Summauspalvelija(int portti, int palvelijanumero) throws IOException {
 		this.portti = portti;
@@ -58,23 +61,31 @@ public class Summauspalvelija extends Thread {
 		}
 		if (verbose)
 			System.out.println("-------Aloitetaan lukemaan portista: "+this.portti);
-		while(true)
+		while(running)
 		{
-			
-			try {
-				luettu = objectIn.readInt();
-				if (verbose) 
-					System.out.println("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
-				if (luettu == 0)
-					welcomeSocket.close();
-				kokonaissumma = kokonaissumma + luettu;
-				lukujenmaara++;
 
+			try {
+				if (connectionSocket.isConnected()) {
+					luettu = objectIn.readInt();
+					if (verbose) 
+						System.out.println("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
+					if (luettu == 0) {
+						welcomeSocket.close();
+					}
+					else {
+						kokonaissumma = kokonaissumma + luettu;
+						lukujenmaara++;	
+					}
+				} else {
+					System.out.println(this.portti+" on suljettu");
+				}
 			} catch (IOException e) {
-				e.printStackTrace();
-				break;
-			}
-		}
+				System.out.println("--------TryCatch blokissa");
+				//e.printStackTrace();
+				running = false;
+				//break;
+			} // catch
+		} // while
 		try {
 			welcomeSocket.close();
 		} catch (IOException e) {
@@ -110,5 +121,17 @@ public class Summauspalvelija extends Thread {
 	 */
 	public int getPalvelijanumero() {
 		return palvelijanumero;
+	}
+	/**
+	 * @return the running
+	 */
+	public boolean isRunning() {
+		return running;
+	}
+	/**
+	 * @param running the running to set
+	 */
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 }

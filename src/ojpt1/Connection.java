@@ -128,13 +128,13 @@ public class Connection {
 						objectOut.writeInt(kokonaisMaara());
 						objectOut.flush();
 					} else if (luettu == 0) {
-						//Suljetaan soketit
+						for (int i = 0; i < palvelijat.size(); i++) {
+							palvelijat.get(i).setRunning(false);
+						}
+						// Lopuksi suljetaan soketit
 						udpSocket.close();	
 						receiverSocket.close();
 						clientSocket.close();
-						for (int i = 0; i < palvelijat.size(); i++) {
-							palvelijat.get(i).interrupt();
-						}
 					} else {
 						objectOut.writeInt(-1);
 						objectOut.flush();
