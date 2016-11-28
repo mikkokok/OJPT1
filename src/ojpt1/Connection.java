@@ -99,7 +99,7 @@ public class Connection {
 				if(receivedNumber != 0){
 					for (int i = 0; i < receivedNumber; i++) { // Tehdään pyydetty määrä portteja ja ilmoitetaan niiden numerot
 					System.out.println("Luodaan portti "+porttialoitus);
-					palvelijat.add(new Summauspalvelija(porttialoitus));
+					palvelijat.add(new Summauspalvelija(porttialoitus, i+1));
 					objectOut.writeInt(porttialoitus);
 					objectOut.flush();
 					porttialoitus++;
@@ -168,15 +168,15 @@ public class Connection {
 		return summa;
 	}
 	public static int missaSuurinSumma() { // mille summauspalvelijalle välitettyjen lukujen summa on suurin
-		int palvelijaportti = palvelijat.get(0).getPortti();;
+		int palvelinumero = palvelijat.get(0).getPalvelijanumero();
 		int suurinsumma = palvelijat.get(0).getKokonaissumma();
 		for (int i = 1; i < palvelijat.size(); i++) {
 			if (suurinsumma < palvelijat.get(i).getKokonaissumma()) { // on löytynyt suurempi kokonaissumma
 				suurinsumma = palvelijat.get(i).getKokonaissumma();
-				palvelijaportti = palvelijat.get(i).getPortti();
+				palvelinumero = palvelijat.get(i).getPalvelijanumero();
 			}
 		}
-		return palvelijaportti;
+		return palvelinumero;
 	}
 	public static int kokonaisMaara() { // mikä on tähän mennessä kaikille summauspalvelimille välitettyjen lukujen kokonaismäärä
 		int maara = 0;

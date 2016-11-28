@@ -12,7 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * @author Mikko
+ * @author Mikko Kokkonen
  *
  */
 public class Summauspalvelija extends Thread {
@@ -23,14 +23,16 @@ public class Summauspalvelija extends Thread {
 	private int portti;
 	private int lukujenmaara = 0;
 	private int kokonaissumma = 0;
+	private int palvelijanumero = 0;
 	private int luettu;
 	private ServerSocket welcomeSocket = null;
 	private Socket connectionSocket = null;
 	private ObjectInputStream objectIn = null;
 	private boolean verbose = true;
 
-	public Summauspalvelija(int portti) throws IOException {
+	public Summauspalvelija(int portti, int palvelijanumero) throws IOException {
 		this.portti = portti;
+		this.palvelijanumero = palvelijanumero;
 		Thread tredi = this;
 		tredi.start();
 	}
@@ -104,5 +106,11 @@ public class Summauspalvelija extends Thread {
 	 */
 	public int getPortti() {
 		return portti;
+	}
+	/**
+	 * @return the palvelijanumero
+	 */
+	public int getPalvelijanumero() {
+		return palvelijanumero;
 	}
 }
