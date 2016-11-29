@@ -11,13 +11,17 @@ public class Listener extends Thread{
 	private ServerSocket socket;
 	
 	public Listener(int port) throws IOException{
-		System.out.println("Listener olio luotu");
+		
+		GUI.updateTextArea("Kuuntelija luotu");
+		//System.out.println("Listener olio luotu");
 		this.port = port;
 		//socket = new DatagramSocket(port);
 		socket = new ServerSocket(port);
 		socket.setSoTimeout(5000);
 	}
 	public void run() {
-		System.out.println("Listener käynnistetty");
+		GUI.updateTextArea("Kuuntelija käynnistetty");
+		//System.out.println("Listener käynnistetty");
 	}
+	
 }

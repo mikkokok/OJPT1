@@ -1,8 +1,8 @@
 package ojpt1;
 
+import java.awt.TextArea;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 
 //Käyttöliittymäluokka
 public class GUI {
@@ -10,7 +10,7 @@ public class GUI {
 	//Luodaan tarvittavat oliot ikkunalle, listalle
 	//painikkeelle ja painikkeen toiminnallisuudelle
 	private JFrame window;
-	private JList<String> list;
+	private static TextArea textarea;
 	private JButton connectButton;
 	private Handler handler;
 
@@ -21,7 +21,8 @@ public class GUI {
 		window = new JFrame(header);
 
 		//Alustetaan lista ohjelman ilmoituksien vastaanottamista varten
-		list = new JList<String>();
+		//list = new JList<String>();
+		textarea = new TextArea();
 
 		//Alustetaan painike joka suorittaa ohjelman toiminnallisuudet
 		connectButton = new JButton("Muodosta yhteys");
@@ -45,18 +46,24 @@ public class GUI {
 
 		//Sijoitetaan painike ja lista paikoilleen
 		connectButton.setBounds(320, 50, 150, 80);
-		list.setBounds(10, 50, 300, 350);
-
+		textarea.setBounds(10, 50, 300, 350);
+		
+		textarea.setEditable(false);
+		
 		//Lisätään yhteydenotto-toiminto painikkeelle
 		connectButton.addActionListener(handler);
 
 		//Sijoitetaan lista, painike ja 
 		//sovellus ikkunan sisälle
-		window.add(list);
+		window.add(textarea);
 		window.add(connectButton);
 		window.add(program);
 
 		//Käynnistetään sovellus
 		program.start();
+	}
+	
+	public static void updateTextArea(String text){
+		textarea.append(text + "\n");
 	}
 }

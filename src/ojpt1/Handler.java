@@ -12,7 +12,7 @@ public class Handler implements ActionListener {
 	//ja aikarajalle joka on 5 sekunttia
 	private final int targetPort = 3126;
 	private int timeOut = 5000;
-
+	
 	public Handler(){
 	}
 	//Metodi joka muodostaa yhteyden palvelimeen kun
