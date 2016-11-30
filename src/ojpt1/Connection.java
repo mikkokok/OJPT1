@@ -138,7 +138,6 @@ public class Connection {
 						for (int i = 0; i < palvelijat.size(); i++) {
 							palvelijat.get(i).setRunning(false);
 						}
-						
 						// Lopuksi suljetaan soketit
 						udpSocket.close();	
 						receiverSocket.close();

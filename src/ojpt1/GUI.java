@@ -1,9 +1,12 @@
 package ojpt1;
 
+import java.awt.Dimension;
 import java.awt.TextArea;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 //Käyttöliittymäluokka
 public class GUI {
@@ -71,9 +74,19 @@ public class GUI {
 	
 	//Metodi joka sulkee ohjelman ja tulostaa viestin siitä
 	public static void printClosingMessage(String message){
+		
+		Object[] options = {"Näytä loki", "Ok"};
+		int answer = JOptionPane.showOptionDialog(null, message, "Message", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
+		
+		if(answer == JOptionPane.YES_OPTION){
+			
+			JOptionPane.showMessageDialog(null, textarea, "Loki", JOptionPane.OK_OPTION);
+			System.exit(1);
 
-		JOptionPane.showMessageDialog(new JFrame(), message);
-		System.exit(1);
+		}
+		else
+			System.exit(1);
 		
 	}
+	
 }
