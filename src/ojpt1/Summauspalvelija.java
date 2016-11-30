@@ -61,7 +61,6 @@ public class Summauspalvelija extends Thread {
 		}
 		if (verbose)
 			GUI.updateTextArea("-------Aloitetaan lukemaan portista: "+this.portti);
-			//System.out.println("-------Aloitetaan lukemaan portista: "+this.portti);
 		while(running)
 		{
 
@@ -70,7 +69,6 @@ public class Summauspalvelija extends Thread {
 					luettu = objectIn.readInt();
 					if (verbose) 
 						GUI.updateTextArea("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
-						//System.out.println("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
 					if (luettu == 0) {
 						welcomeSocket.close();
 					}
@@ -80,12 +78,10 @@ public class Summauspalvelija extends Thread {
 					}
 				} else {
 					GUI.updateTextArea(this.portti+" on suljettu");
-					//System.out.println(this.portti+" on suljettu");
 				}
 			} catch (IOException e) {
 				if (verbose) {
 				GUI.updateTextArea("--------TryCatch blokissa");
-				//System.out.println("--------TryCatch blokissa");
 				e.printStackTrace();
 				}
 				running = false;
@@ -96,7 +92,6 @@ public class Summauspalvelija extends Thread {
 			welcomeSocket.close();
 		} catch (IOException e) {
 			GUI.updateTextArea("Portin "+this.portti+" sulkeminen epännistui. "+e);
-			//System.out.println("Portin "+this.portti+" sulkeminen epännistui. "+e); 
 		}
 	} // setuptcplistener
 	/**

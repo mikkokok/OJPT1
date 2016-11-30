@@ -3,6 +3,7 @@ package ojpt1;
 import java.awt.TextArea;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 //Käyttöliittymäluokka
 public class GUI {
@@ -63,7 +64,16 @@ public class GUI {
 		program.start();
 	}
 	
+	//Metodi joka päivittää tekstilaatikkoa
 	public static void updateTextArea(String text){
 		textarea.append(text + "\n");
+	}
+	
+	//Metodi joka sulkee ohjelman ja tulostaa viestin siitä
+	public static void printClosingMessage(String message){
+
+		JOptionPane.showMessageDialog(new JFrame(), message);
+		System.exit(1);
+		
 	}
 }
