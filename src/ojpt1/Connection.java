@@ -113,12 +113,13 @@ public class Connection {
 					//objectOut.writeInt(val);
 				}
 				else{
-					GUI.printClosingMessage("Vastaanotettiin luku " + receivedNumber + " palvelimelta. Lopetetaan ohjelma...");
 					//Suljetaan soketit
-					udpSocket.close();	
-					receiverSocket.close();
 					clientSocket.close();
-					//System.exit(1);
+					receiverSocket.close();
+					udpSocket.close();	
+
+					GUI.printClosingMessage("Vastaanotettiin luku " + receivedNumber + " palvelimelta. Lopetetaan ohjelma...");
+
 				} // else
 				while (true) { // Luetaan viestejä portilta
 					int luettu = objectIn.readInt();
@@ -139,9 +140,9 @@ public class Connection {
 							palvelijat.get(i).setRunning(false);
 						}
 						// Lopuksi suljetaan soketit
-						udpSocket.close();	
-						receiverSocket.close();
 						clientSocket.close();
+						receiverSocket.close();
+						udpSocket.close();	
 						
 						GUI.printClosingMessage("Kommunikointi loppui sillä palvelin kysely lähetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
 					} else {

@@ -1,12 +1,9 @@
 package ojpt1;
 
-import java.awt.Dimension;
 import java.awt.TextArea;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 //Käyttöliittymäluokka
 public class GUI {
