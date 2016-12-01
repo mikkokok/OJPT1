@@ -80,15 +80,10 @@ public class Summauspalvelija extends Thread {
 					GUI.updateTextArea(this.portti+" on suljettu");
 				}
 			} catch (IOException e) {
-<<<<<<< HEAD
 				if (verbose) {
 				GUI.updateTextArea("--------TryCatch blokissa");
 				e.printStackTrace();
 				}
-=======
-				System.out.println("--------TryCatch blokissa");
-				//e.printStackTrace();
->>>>>>> parent of cc021dc... verbose
 				running = false;
 				//break;
 			} // catch
