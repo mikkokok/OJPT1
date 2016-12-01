@@ -13,7 +13,7 @@ public class WorkDistributor extends Thread {
 	public static boolean verboseMode = true;
 	/*public static void main(String[] args) throws Exception {
 		if (args.length == 1 && args[0].equals("verbose")) {
-			verboseMode = true;}
+			verboseMode = true;
 		}*/
 	public WorkDistributor() throws Exception {
 		

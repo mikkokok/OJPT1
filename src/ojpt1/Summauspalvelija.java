@@ -61,6 +61,7 @@ public class Summauspalvelija extends Thread {
 		}
 		if (verbose)
 			GUI.updateTextArea("-------Aloitetaan lukemaan portista: "+this.portti);
+			//System.out.println("-------Aloitetaan lukemaan portista: "+this.portti);
 		while(running)
 		{
 
@@ -68,9 +69,13 @@ public class Summauspalvelija extends Thread {
 				if (connectionSocket.isConnected()) {
 					luettu = objectIn.readInt();
 					if (verbose) 
-						GUI.updateTextArea("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
+						//Jos kutsutaan updateTextarea-metodia niin kyselyt saavat v‰‰ri‰ vastauksia
+						//ja system.out.prinln k‰yttess‰ tulee java.io.EOFException
+						//GUI.updateTextArea("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
+						System.out.println("-------Portti: "+this.portti+ " vastaanotti: " +luettu);
 					if (luettu == 0) {
 						welcomeSocket.close();
+						GUI.printClosingMessage("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
 					}
 					else {
 						kokonaissumma = kokonaissumma + luettu;
@@ -78,11 +83,13 @@ public class Summauspalvelija extends Thread {
 					}
 				} else {
 					GUI.updateTextArea(this.portti+" on suljettu");
+					//System.out.println(this.portti+" on suljettu");
 				}
 			} catch (IOException e) {
 				if (verbose) {
-				GUI.updateTextArea("--------TryCatch blokissa");
-				e.printStackTrace();
+					GUI.updateTextArea("--------TryCatch blokissa");
+					//System.out.println("--------TryCatch blokissa");
+					e.printStackTrace();
 				}
 				running = false;
 				//break;
@@ -91,7 +98,8 @@ public class Summauspalvelija extends Thread {
 		try {
 			welcomeSocket.close();
 		} catch (IOException e) {
-			GUI.updateTextArea("Portin "+this.portti+" sulkeminen ep‰nnistui. "+e);
+			//GUI.updateTextArea("Portin "+this.portti+" sulkeminen ep‰nnistui. "+e);
+			System.out.println("Portin "+this.portti+" sulkeminen ep‰nnistui. "+e);
 		}
 	} // setuptcplistener
 	/**

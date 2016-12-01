@@ -1,11 +1,6 @@
 package ojpt1;
 
 import java.awt.Canvas;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
 
 //Ohjelman p‰‰luokka
 public class Program extends Canvas implements Runnable {
@@ -49,7 +44,7 @@ public class Program extends Canvas implements Runnable {
 		//periaatteessa sovelluksen syd‰n
 		while(running){
 			try {
-				mainThread.sleep(10);
+				mainThread.sleep(10);;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -59,13 +54,12 @@ public class Program extends Canvas implements Runnable {
 		//joka sulkee sovelluksen
 		stop();	
 	}
-	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		new Program();
 		Thread thread1 = new WorkDistributor();
 		//Thread thread2 = new Listener(1025);
 		thread1.start();
-		//thread2.start();	
+		//thread2.start();
 	}
 }

@@ -11,10 +11,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 //Yhteydenottoluokka
 public class Connection {
@@ -43,10 +40,9 @@ public class Connection {
 			tredit.add(new Thread());
 		}
 	*/
-		
 		//Luodaan udp soketti koneen vapaaseen porttiin
 		GUI.updateTextArea("Connection luokka aloitettu");
-
+		//System.out.println("Connection luokka aloitettu");
 		DatagramSocket udpSocket = new DatagramSocket();
 
 		//Luodaan soketit TCP-yhteyttä varten
@@ -55,8 +51,8 @@ public class Connection {
 
 		//Tallennetaan vapaa portti ja muunnetaan se sopivaan muotoon
 		//UDP paketin lähettämistä varten
-		int getMyPort = receiverSocket.getLocalPort();
-		myPort = Integer.toString(getMyPort);
+		int getPort = receiverSocket.getLocalPort();
+		myPort = Integer.toString(getPort);
 		data = myPort.getBytes();
 
 		//Luodaan muuttuja palvelimen kohdeosoitelle
@@ -89,8 +85,8 @@ public class Connection {
 
 				//Tallennetaan palvelimen lähettäjä kokonaisluku
 				int receivedNumber = objectIn.readInt();
-				
-				GUI.updateTextArea("Connection luokka vastaanotettu: "+ receivedNumber);
+				GUI.updateTextArea("Connection luokka vastaanotettu: "+receivedNumber);
+				//System.out.println("Connection luokka vastaanotettu: "+receivedNumber);
 				
 				//Odotetaan 5 sekunttia palvelimelta tulevaa kokonaislukua
 				try {
@@ -99,33 +95,31 @@ public class Connection {
 					e.printStackTrace();
 				}
 				//Tehdään vaadittavat toimenpiteet kun kokonaisluku on saatu
-				//Jos kokonaislukua väliltä 2 - 10 ei saada niin lähetetään palvelimeen -1 ja suljetaan ohjelma
+				//Jos kokonaislukua ei saada niin lähetetään palvelimeen -1 ja suljetaan ohjelma
 				if(receivedNumber > 2 || receivedNumber < 10){
 					for (int i = 0; i < receivedNumber; i++) { // Tehdään pyydetty määrä portteja ja ilmoitetaan niiden numerot
-					
-					GUI.updateTextArea("Luodaan portti "+porttialoitus);
-					
-					palvelijat.add(new Summauspalvelija(porttialoitus, i+1));
-					objectOut.writeInt(porttialoitus);
-					objectOut.flush();
-					porttialoitus++;
+						GUI.updateTextArea("Luodaan portti "+porttialoitus);
+						//System.out.println("Luodaan portti "+porttialoitus);
+						palvelijat.add(new Summauspalvelija(porttialoitus, i+1));
+						objectOut.writeInt(porttialoitus);
+						objectOut.flush();
+						porttialoitus++;
 					}
 					//objectOut.writeInt(val);
 				}
 				else{
+					objectOut.writeInt(-1);
+					objectOut.flush();
 					//Suljetaan soketit
-					clientSocket.close();
-					receiverSocket.close();
 					udpSocket.close();	
-
-					GUI.printClosingMessage("Vastaanotettiin luku " + receivedNumber + " palvelimelta. Lopetetaan ohjelma...");
-
+					receiverSocket.close();
+					clientSocket.close();
+					System.exit(1);
 				} // else
 				while (true) { // Luetaan viestejä portilta
 					int luettu = objectIn.readInt();
-					
 					GUI.updateTextArea("------------Connection luokka: "+luettu);
-
+					//System.out.println("------------Connection luokka: "+luettu);
 					if (luettu == 1) {
 						objectOut.writeInt(kokonaisSumma());
 						objectOut.flush();
@@ -140,23 +134,16 @@ public class Connection {
 							palvelijat.get(i).setRunning(false);
 						}
 						// Lopuksi suljetaan soketit
-						clientSocket.close();
-						receiverSocket.close();
 						udpSocket.close();	
+						receiverSocket.close();
+						clientSocket.close();
 						
 						GUI.printClosingMessage("Kommunikointi loppui sillä palvelin kysely lähetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
 					} else {
 						objectOut.writeInt(-1);
 						objectOut.flush();
-						
-						udpSocket.close();	
-						receiverSocket.close();
-						clientSocket.close();
-						
 					}
-
 				}
-				
 
 			}catch(SocketTimeoutException e){
 				//Mikäli yhteyttä palvelimeen ei pystytä 5:n sekunnin päästä muodostamaan niin
@@ -165,9 +152,12 @@ public class Connection {
 
 					//Kun yhteyttä on yritetty muodostaa 5 kertaa niin suljetaan ohjelma
 					if(counter == 5){
-						GUI.printClosingMessage("Yhteyttä ei voitu muodostaa. Suljetaan ohjelma...");
+						//GUI.printClosingMessage("Yhteyttä ei voitu muodostaa. Suljetaan ohjelma...");
+						System.out.println("Yhteyttä ei voitu muodostaa. Suljetaan ohjelma...");
+						System.exit(1);
 					}
-					GUI.updateTextArea("Yhteyttä ei voitu muodostaa. Yritetään uudelleen lähettämällä UDP-paketti uudestaan");
+					//GUI.updateTextArea("Yhteyttä ei voitu muodostaa. Yritetään uudelleen lähettämällä UDP-paketti uudestaan");
+					System.out.println("Yhteyttä ei voitu muodostaa. Yritetään uudelleen lähettämällä UDP-paketti uudestaan");
 					udpSocket.send(packet);
 					counter++;
 					receiverSocket.setSoTimeout(timeOut);
@@ -201,5 +191,4 @@ public class Connection {
 		}
 		return maara;
 	}
-	
 } // class
