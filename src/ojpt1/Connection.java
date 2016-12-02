@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 //Yhteydenottoluokka
@@ -24,6 +25,7 @@ public class Connection {
 	private int porttialoitus = 1230; // tehd‰‰n portteja v‰lille 1230-1240
 	public static LinkedList<Summauspalvelija> palvelijat = new LinkedList<Summauspalvelija>();
 	public static LinkedList<Thread> tredit = new LinkedList<Thread>();
+
 	
 	public Connection(int targetPort, int timeOut){
 		this.targetPort = targetPort;
@@ -114,31 +116,39 @@ public class Connection {
 					udpSocket.close();	
 					receiverSocket.close();
 					clientSocket.close();
-					System.exit(1);
+					GUI.printClosingMessage("Sovellus vastaanotti luvattoman luvun: " + receivedNumber + "\nSuljetaan ohjelma...");
 				} // else
 				while (true) { // Luetaan viestej‰ portilta
+					GUI.updateTextArea("Luetaan palvelimelta tulevia lukuja...");
+					//System.out.println("Luetaan palvelimelta tulevia lukuja...");
 					int luettu = objectIn.readInt();
 					GUI.updateTextArea("------------Connection luokka: "+luettu);
 					//System.out.println("------------Connection luokka: "+luettu);
 					if (luettu == 1) {
+						GUI.updateTextArea("Palvelin l‰hetti kyselyn: " +  luettu + "\nVastataan kyselyyn l‰hett‰m‰ll‰ kokonaissumma: " + kokonaisSumma());
 						objectOut.writeInt(kokonaisSumma());
 						objectOut.flush();
 					} else if (luettu == 2) {
+						GUI.updateTextArea("Palvelin l‰hetti kyselyn: " +  luettu + "\nVastataan kyselyyn l‰hett‰m‰ll‰ suurin summa: " + missaSuurinSumma());
 						objectOut.writeInt(missaSuurinSumma());
 						objectOut.flush();
 					} else if (luettu == 3) {
+						GUI.updateTextArea("Palvelin l‰hetti kyselyn: " +  luettu + "\nVastataan kyselyyn l‰hett‰m‰ll‰ kokonaism‰‰r‰: " + kokonaisMaara());
 						objectOut.writeInt(kokonaisMaara());
 						objectOut.flush();
 					} else if (luettu == 0) {
+						GUI.printClosingMessage("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
+						//GUI.updateTextArea("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu);
 						for (int i = 0; i < palvelijat.size(); i++) {
 							palvelijat.get(i).setRunning(false);
 						}
+
 						// Lopuksi suljetaan soketit
 						udpSocket.close();	
 						receiverSocket.close();
 						clientSocket.close();
 						
-						GUI.printClosingMessage("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
+						
 					} else {
 						objectOut.writeInt(-1);
 						objectOut.flush();
@@ -156,8 +166,8 @@ public class Connection {
 						System.out.println("Yhteytt‰ ei voitu muodostaa. Suljetaan ohjelma...");
 						System.exit(1);
 					}
-					//GUI.updateTextArea("Yhteytt‰ ei voitu muodostaa. Yritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
-					System.out.println("Yhteytt‰ ei voitu muodostaa. Yritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
+					GUI.updateTextArea("Yhteytt‰ ei voitu muodostaa. Yritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
+					//System.out.println("Yhteytt‰ ei voitu muodostaa. Yritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
 					udpSocket.send(packet);
 					counter++;
 					receiverSocket.setSoTimeout(timeOut);

@@ -58,8 +58,6 @@ public class Program extends Canvas implements Runnable {
 		// TODO Auto-generated method stub
 		new Program();
 		Thread thread1 = new WorkDistributor();
-		//Thread thread2 = new Listener(1025);
 		thread1.start();
-		//thread2.start();
 	}
 }

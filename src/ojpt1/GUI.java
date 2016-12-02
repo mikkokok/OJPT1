@@ -1,6 +1,8 @@
 package ojpt1;
 
 import java.awt.TextArea;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -14,6 +16,8 @@ public class GUI {
 	private static TextArea textarea;
 	private JButton connectButton;
 	private Handler handler;
+	
+	public static ArrayList<String> lista = new ArrayList<String>();
 
 	//Luokan konstruktori joka luo uuden ikkunan ohjelmalle
 	public GUI(int width, int height, String header, Program program){
