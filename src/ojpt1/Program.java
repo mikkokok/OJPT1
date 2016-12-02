@@ -7,15 +7,14 @@ public class Program extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
-	//Muuttujat sovelluksen ikkunan koolle
-	public final int WIDTH = 500;
+	//Muuttujat sovelluksen ikkunan koolle sekä
+	//käyttöliittymän toimintaa varten
+	public final int WIDTH = 700;
 	public final int HEIGHT = 500;
-
-	//Muuttujat sovelluksen käyttöliittymän toimintaa varten
 	private Thread mainThread;
 	private boolean running = false;
 
-	//Luokan konstruktori, joka implementoi sovelluksen ikkunan
+	//Luokan konstruktori, joka toteuttaa sovelluksen ikkunan
 	public Program(){
 		new GUI(WIDTH, HEIGHT, "Harjoitustyö 1", this);
 

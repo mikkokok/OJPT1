@@ -1,8 +1,6 @@
 package ojpt1;
 
 import java.awt.TextArea;
-import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -16,8 +14,6 @@ public class GUI {
 	private static TextArea textarea;
 	private JButton connectButton;
 	private Handler handler;
-	
-	public static ArrayList<String> lista = new ArrayList<String>();
 
 	//Luokan konstruktori joka luo uuden ikkunan ohjelmalle
 	public GUI(int width, int height, String header, Program program){
@@ -25,15 +21,13 @@ public class GUI {
 		//Alustetaan JFrame tyyppinen olio ikkunan muodostamista varten
 		window = new JFrame(header);
 
-		//Alustetaan lista ohjelman ilmoituksien vastaanottamista varten
-		//list = new JList<String>();
+		//Alustetaan tekstilaatikko, johon tulee ohjelman syˆtteet
 		textarea = new TextArea();
 
 		//Alustetaan painike joka suorittaa ohjelman toiminnallisuudet
 		connectButton = new JButton("Muodosta yhteys");
 
-		//Alustetaan Handler tyyppinen olio painikkeen toiminnallisuutta
-		//(yhteydenotto palvelimeen) varten
+		//Alustetaan Handler tyyppinen olio painikkeen toiminnallisuutta varten
 		handler = new Handler();
 
 		//Asetetaan ikkunan koko ja m‰‰ritet‰‰n ettei 
@@ -49,16 +43,17 @@ public class GUI {
 		window.setVisible(true);
 		window.setLocationRelativeTo(null);
 
-		//Sijoitetaan painike ja lista paikoilleen
-		connectButton.setBounds(320, 50, 150, 80);
-		textarea.setBounds(10, 50, 300, 350);
+		//Sijoitetaan painike ja tekstilaatikko paikoilleen
+		connectButton.setBounds(450, 50, 150, 80);
+		textarea.setBounds(10, 50, 400, 350);
 		
+		//M‰‰ritell‰‰n ettei k‰ytt‰j‰ pysty muokkaamaan tekstilaatikkoa
 		textarea.setEditable(false);
 		
 		//Lis‰t‰‰n yhteydenotto-toiminto painikkeelle
 		connectButton.addActionListener(handler);
 
-		//Sijoitetaan lista, painike ja 
+		//Sijoitetaan tekstilaatikko, painike ja 
 		//sovellus ikkunan sis‰lle
 		window.add(textarea);
 		window.add(connectButton);
@@ -68,22 +63,24 @@ public class GUI {
 		program.start();
 	}
 	
-	//Metodi joka p‰ivitt‰‰ tekstilaatikkoa
+	//Metodi joka p‰ivitt‰‰ tekstilaatikkon sis‰ltˆ‰
 	public static void updateTextArea(String text){
 		textarea.append(text + "\n");
 	}
 	
-	//Metodi joka sulkee ohjelman ja tulostaa viestin siit‰
+	//Metodi joka sulkee ohjelman ja tulostaa sulkemisviestin
 	public static void printClosingMessage(String message){
 		
+		//luodaan viestilaatikko ja sen painikkeet. Annetaan k‰ytt‰j‰lle mahdollisuus katsoa
+		//tekstilaatikon sis‰ltˆ ennen kuin ohjelma sulkeutuu
 		Object[] options = {"N‰yt‰ loki", "Ok"};
 		int answer = JOptionPane.showOptionDialog(null, message, "Message", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
 		
-		if(answer == JOptionPane.YES_OPTION){
-			
+		//Jos k‰ytt‰j‰ valitsee "N‰yt‰ loki"-vaihtoehdon niin luodaan uusi viestilaatikko,
+		//joka sis‰lt‰‰ sis‰lt‰‰ olemassa olevan tekstilaatikon. Muussa tapauksessa suljetaan ohjelma
+		if(answer == JOptionPane.YES_OPTION){			
 			JOptionPane.showMessageDialog(null, textarea, "Loki", JOptionPane.OK_OPTION);
 			System.exit(1);
-
 		}
 		else
 			System.exit(1);

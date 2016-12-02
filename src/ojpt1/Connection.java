@@ -11,7 +11,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 //Yhteydenottoluokka
@@ -26,7 +25,6 @@ public class Connection {
 	public static LinkedList<Summauspalvelija> palvelijat = new LinkedList<Summauspalvelija>();
 	public static LinkedList<Thread> tredit = new LinkedList<Thread>();
 
-	
 	public Connection(int targetPort, int timeOut){
 		this.targetPort = targetPort;
 		this.timeOut = timeOut;
@@ -37,20 +35,19 @@ public class Connection {
 
 	@SuppressWarnings("resource")
 	public void Connect() throws IOException{
-		// Tehd‰‰n mahdollisesti tarvittavat kymmenen tredi‰ valmiiksi
-	/*	for (int i = 0; i < 10; i++) {
-			tredit.add(new Thread());
-		}
-	*/
-		//Luodaan udp soketti koneen vapaaseen porttiin
-		GUI.updateTextArea("Connection luokka aloitettu");
-		//System.out.println("Connection luokka aloitettu");
+		
+		GUI.updateTextArea("Muodostetaan yhteys palvelimeen");
+
+		//Luodaan udp-soketti koneen vapaaseen porttiin
 		DatagramSocket udpSocket = new DatagramSocket();
 
 		//Luodaan soketit TCP-yhteytt‰ varten
 		ServerSocket receiverSocket = new ServerSocket(0);
 		Socket clientSocket = new Socket();
 
+		//Asetetaan aikaraja palvelinsoketille
+		receiverSocket.setSoTimeout(timeOut);
+		
 		//Tallennetaan vapaa portti ja muunnetaan se sopivaan muotoon
 		//UDP paketin l‰hett‰mist‰ varten
 		int getPort = receiverSocket.getLocalPort();
@@ -67,63 +64,50 @@ public class Connection {
 		//L‰hetet‰‰n paketti palvelimelle.
 		udpSocket.send(packet);
 
-		//Alustetaan palvelinsoketti palvelimen porttiin ja 
-		//asetetaan sille aikarajaksi 5 sekunttia
-		//receiverSocket = new ServerSocket(data.length);
-		receiverSocket.setSoTimeout(timeOut);
-
 		while(true){
 			try{
 				//Alustetaan asiakassokettti ottamalla vastaan palvelimen
 				//l‰hett‰m‰ yhteyden muodostus pyyntˆ
 				clientSocket = receiverSocket.accept();	
+				
+				GUI.updateTextArea("Yhteys muodostettu.");
 
 				//Luodaan virrat joiden sis‰ll‰ sovellus kommunikoi palvelimen kanssa
 				OutputStream outStream = clientSocket.getOutputStream();
 				InputStream inStream = clientSocket.getInputStream();
-
 				ObjectOutputStream objectOut = new ObjectOutputStream(outStream);
 				ObjectInputStream objectIn = new ObjectInputStream(inStream);
 
 				//Tallennetaan palvelimen l‰hett‰j‰ kokonaisluku
 				int receivedNumber = objectIn.readInt();
-				GUI.updateTextArea("Connection luokka vastaanotettu: "+receivedNumber);
-				//System.out.println("Connection luokka vastaanotettu: "+receivedNumber);
-				
-				//Odotetaan 5 sekunttia palvelimelta tulevaa kokonaislukua
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				GUI.updateTextArea("Vastaanotettiin luku: "+receivedNumber);
+
 				//Tehd‰‰n vaadittavat toimenpiteet kun kokonaisluku on saatu
 				//Jos kokonaislukua ei saada niin l‰hetet‰‰n palvelimeen -1 ja suljetaan ohjelma
 				if(receivedNumber > 2 || receivedNumber < 10){
 					for (int i = 0; i < receivedNumber; i++) { // Tehd‰‰n pyydetty m‰‰r‰ portteja ja ilmoitetaan niiden numerot
 						GUI.updateTextArea("Luodaan portti "+porttialoitus);
-						//System.out.println("Luodaan portti "+porttialoitus);
 						palvelijat.add(new Summauspalvelija(porttialoitus, i+1));
 						objectOut.writeInt(porttialoitus);
 						objectOut.flush();
 						porttialoitus++;
 					}
-					//objectOut.writeInt(val);
 				}
 				else{
 					objectOut.writeInt(-1);
 					objectOut.flush();
+					
 					//Suljetaan soketit
 					udpSocket.close();	
 					receiverSocket.close();
 					clientSocket.close();
+					
 					GUI.printClosingMessage("Sovellus vastaanotti luvattoman luvun: " + receivedNumber + "\nSuljetaan ohjelma...");
 				} // else
 				while (true) { // Luetaan viestej‰ portilta
-					GUI.updateTextArea("Luetaan palvelimelta tulevia lukuja...");
-					//System.out.println("Luetaan palvelimelta tulevia lukuja...");
+					GUI.updateTextArea("Luetaan palvelimelta tulevia lukuja luotuihin portteihin...");
 					int luettu = objectIn.readInt();
-					GUI.updateTextArea("------------Connection luokka: "+luettu);
-					//System.out.println("------------Connection luokka: "+luettu);
+
 					if (luettu == 1) {
 						GUI.updateTextArea("Palvelin l‰hetti kyselyn: " +  luettu + "\nVastataan kyselyyn l‰hett‰m‰ll‰ kokonaissumma: " + kokonaisSumma());
 						objectOut.writeInt(kokonaisSumma());
@@ -137,8 +121,7 @@ public class Connection {
 						objectOut.writeInt(kokonaisMaara());
 						objectOut.flush();
 					} else if (luettu == 0) {
-						GUI.printClosingMessage("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
-						//GUI.updateTextArea("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu);
+			
 						for (int i = 0; i < palvelijat.size(); i++) {
 							palvelijat.get(i).setRunning(false);
 						}
@@ -147,6 +130,8 @@ public class Connection {
 						udpSocket.close();	
 						receiverSocket.close();
 						clientSocket.close();
+						
+						GUI.printClosingMessage("Kommunikointi loppui sill‰ palvelin kysely l‰hetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
 						
 						
 					} else {
@@ -162,12 +147,9 @@ public class Connection {
 
 					//Kun yhteytt‰ on yritetty muodostaa 5 kertaa niin suljetaan ohjelma
 					if(counter == 5){
-						//GUI.printClosingMessage("Yhteytt‰ ei voitu muodostaa. Suljetaan ohjelma...");
-						System.out.println("Yhteytt‰ ei voitu muodostaa. Suljetaan ohjelma...");
-						System.exit(1);
+						GUI.printClosingMessage("Yhteytt‰ ei voitu muodostaa. Suljetaan ohjelma...");
 					}
-					GUI.updateTextArea("Yhteytt‰ ei voitu muodostaa. Yritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
-					//System.out.println("Yhteytt‰ ei voitu muodostaa. Yritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
+					GUI.updateTextArea("Yhteytt‰ ei voitu muodostaa.\nYritet‰‰n uudelleen l‰hett‰m‰ll‰ UDP-paketti uudestaan");
 					udpSocket.send(packet);
 					counter++;
 					receiverSocket.setSoTimeout(timeOut);

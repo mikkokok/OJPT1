@@ -20,11 +20,11 @@ public class Handler implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 
 		//Luodaan Connection-olio palvelimen portin numeron ja aikarajan avulla
-		Connection udpConnection = new Connection(targetPort, timeOut);
+		Connection connection = new Connection(targetPort, timeOut);
 
 		//Luodaan yhteys
 		try {
-			udpConnection.Connect();
+			connection.Connect();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

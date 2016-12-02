@@ -14,9 +14,6 @@ import java.net.Socket;
  */
 public class Summauspalvelija extends Thread {
 
-	/**
-	 * @param args
-	 */
 	private int portti;
 	private int lukujenmaara = 0;
 	private int kokonaissumma = 0;
@@ -63,6 +60,7 @@ public class Summauspalvelija extends Thread {
 				if (connectionSocket.isConnected()) {
 
 					luettu = objectIn.readInt();
+					
 					if (luettu == 0) {
 						welcomeSocket.close();
 					}
@@ -70,15 +68,13 @@ public class Summauspalvelija extends Thread {
 						kokonaissumma = kokonaissumma + luettu;
 						lukujenmaara++;	
 					}
+					
 				} else {
 					GUI.updateTextArea(this.portti+" on suljettu");
 				}
 				
 			} catch (EOFException e) {
-				GUI.updateTextArea("Yhteys on suljettu");
-				//System.out.println("Yhteys suljettu");
 				break;
-
 			} // catch
 			catch(IOException e){
 				GUI.updateTextArea("--------TryCatch blokissa");
