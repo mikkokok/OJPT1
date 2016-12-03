@@ -30,12 +30,12 @@ public class Connection {
 		this.timeOut = timeOut;
 		data = new byte[256];
 		counter = 0;
-		
+
 	} // Constructor
 
 	@SuppressWarnings("resource")
 	public void Connect() throws IOException{
-		
+
 		GUI.updateTextArea("Muodostetaan yhteys palvelimeen");
 
 		//Luodaan udp-soketti koneen vapaaseen porttiin
@@ -47,7 +47,7 @@ public class Connection {
 
 		//Asetetaan aikaraja palvelinsoketille
 		receiverSocket.setSoTimeout(timeOut);
-		
+
 		//Tallennetaan vapaa portti ja muunnetaan se sopivaan muotoon
 		//UDP paketin lähettämistä varten
 		int getPort = receiverSocket.getLocalPort();
@@ -69,7 +69,7 @@ public class Connection {
 				//Alustetaan asiakassokettti ottamalla vastaan palvelimen
 				//lähettämä yhteyden muodostus pyyntö
 				clientSocket = receiverSocket.accept();	
-				
+
 				GUI.updateTextArea("Yhteys muodostettu.");
 
 				//Luodaan virrat joiden sisällä sovellus kommunikoi palvelimen kanssa
@@ -96,55 +96,52 @@ public class Connection {
 				else{
 					objectOut.writeInt(-1);
 					objectOut.flush();
-					
+
 					//Suljetaan soketit
 					udpSocket.close();	
 					receiverSocket.close();
 					clientSocket.close();
-					
+
 					GUI.printClosingMessage("Sovellus vastaanotti luvattoman luvun: " + receivedNumber + "\nSuljetaan ohjelma...");
 				} // else
 				while (true) { // Luetaan viestejä portilta
 					GUI.updateTextArea("Luetaan palvelimelta tulevia lukuja luotuihin portteihin...");
 					int luettu = objectIn.readInt();
 
+					// Utelu yksi eli palautetaan välitettyjen lukujen kokonaissumma
 					if (luettu == 1) {
 						GUI.updateTextArea("Palvelin lähetti kyselyn: " +  luettu + "\nVastataan kyselyyn lähettämällä kokonaissumma: " + kokonaisSumma());
 						objectOut.writeInt(kokonaisSumma());
 						objectOut.flush();
+						// Utelu kaksi eli palautetaan summauspalvelimen järjestysnumero jonka välitettyjen lukujen summa on suurin
 					} else if (luettu == 2) {
 						GUI.updateTextArea("Palvelin lähetti kyselyn: " +  luettu + "\nVastataan kyselyyn lähettämällä suurin summa: " + missaSuurinSumma());
 						objectOut.writeInt(missaSuurinSumma());
 						objectOut.flush();
+						// Utelu kolme eli palautetaan kuinka monta lukua summauspalvelimille on lähetetty	
 					} else if (luettu == 3) {
 						GUI.updateTextArea("Palvelin lähetti kyselyn: " +  luettu + "\nVastataan kyselyyn lähettämällä kokonaismäärä: " + kokonaisMaara());
 						objectOut.writeInt(kokonaisMaara());
 						objectOut.flush();
+						// Utelu nolla eli summauspalvelimien käyttö lopetetaan
 					} else if (luettu == 0) {
-			
 						for (int i = 0; i < palvelijat.size(); i++) {
 							palvelijat.get(i).setRunning(false);
 						}
-
 						// Lopuksi suljetaan soketit
 						udpSocket.close();	
 						receiverSocket.close();
 						clientSocket.close();
-						
 						GUI.printClosingMessage("Kommunikointi loppui sillä palvelin kysely lähetti luvun: "+ luettu + " \nsuljetaan ohjelma...");
-						
-						
 					} else {
 						objectOut.writeInt(-1);
 						objectOut.flush();
 					}
 				}
-
 			}catch(SocketTimeoutException e){
 				//Mikäli yhteyttä palvelimeen ei pystytä 5:n sekunnin päästä muodostamaan niin
 				//lähetetään UDP-paketti uudestaan, resetoidaan aikaraja ja yritetään muodostaa yhteys uudelleen
 				while(clientSocket.isConnected() == false){
-
 					//Kun yhteyttä on yritetty muodostaa 5 kertaa niin suljetaan ohjelma
 					if(counter == 5){
 						GUI.printClosingMessage("Yhteyttä ei voitu muodostaa. Suljetaan ohjelma...");
@@ -158,14 +155,16 @@ public class Connection {
 			} // try-catch
 		} // while
 	} // Connect()
-	public static int kokonaisSumma() { // mikä on tähän mennessä välitettyjen lukujen kokonaissumma
+	// mikä on tähän mennessä välitettyjen lukujen kokonaissumma
+	public static int kokonaisSumma() { 
 		int summa = 0;
 		for (int i = 0; i < palvelijat.size(); i++) {
 			summa = summa + palvelijat.get(i).getKokonaissumma();
 		}
 		return summa;
 	}
-	public static int missaSuurinSumma() { // mille summauspalvelijalle välitettyjen lukujen summa on suurin
+	// mille summauspalvelijalle välitettyjen lukujen summa on suurin
+	public static int missaSuurinSumma() { 
 		int palvelinumero = palvelijat.get(0).getPalvelijanumero();
 		int suurinsumma = palvelijat.get(0).getKokonaissumma();
 		for (int i = 1; i < palvelijat.size(); i++) {
@@ -176,7 +175,8 @@ public class Connection {
 		}
 		return palvelinumero;
 	}
-	public static int kokonaisMaara() { // mikä on tähän mennessä kaikille summauspalvelimille välitettyjen lukujen kokonaismäärä
+	// mikä on tähän mennessä kaikille summauspalvelimille välitettyjen lukujen kokonaismäärä
+	public static int kokonaisMaara() { 
 		int maara = 0;
 		for (int i = 0; i < palvelijat.size(); i++) {
 			maara = maara + palvelijat.get(i).getLukujenmaara();
